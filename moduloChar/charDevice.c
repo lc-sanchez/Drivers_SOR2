@@ -30,7 +30,7 @@ operations table for your driver.*/
 
 #define DEVICE_NAME "charDevice" //Dev name as it appears in /proc/devices
 #define SUCCESS 0
-#define PROCFS_MAX_SIZE 1024 //max lenght of the msg from the device
+#define PROCFS_MAX_SIZE 80 //max lenght of the msg from the device
 
 //Global variables are declared static, so are global within the file
 static int major; //major number assigned to our device driver
@@ -86,18 +86,29 @@ static int device_release(struct inode *inode, struct file *file)
 //When a process, which already opened the dev file, attempts to read from it
 static ssize_t device_read(struct file *filp, char *buffer, size_t length, loff_t *offset)
 {    
-    int i = 0;
-    int j = procfs_buffer_size;
-    //we are at the end of the message
-    if(*offset !=0){
-        return 0;
-    }
+    int i=0;
+    int j=procfs_buffer_size-2;
 
-    //copiar el contenido //to, from/ cant bytes
+    if(*offset >= procfs_buffer_size){
+        pr_info("Lectura terminada. \n");
+        return SUCCESS; //termino lectura
+    }
+    //copiar el contenido //to, from/ cant bytes q se copiaran
     //se copia el contenido del kernel al user space
-    if (copy_to_user(buffer,procfs_buffer,procfs_buffer_size+1)){
+    if (copy_to_user(buffer,procfs_buffer,procfs_buffer_size)){
         return -EFAULT; //si hay error al copiar los datos
     } 
+    
+    //reverso
+    while(i<j){
+        char letra = buffer[i];
+        buffer[i]=buffer[j];
+        buffer[j]=letra;
+        i++;
+        j--;
+    }
+    
+    //Actualizamos la posicion del offset
     *offset += procfs_buffer_size;
 
     pr_info("Se lee lo siguiente: %s \n",buffer);
@@ -113,22 +124,26 @@ static ssize_t device_read(struct file *filp, char *buffer, size_t length, loff_
 // del device
 static ssize_t device_write(struct file *filp, const char __user *buff, size_t len, loff_t *off)
 {   
-    
+    procfs_buffer_size = len;
     if(len > PROCFS_MAX_SIZE){
         procfs_buffer_size = PROCFS_MAX_SIZE;
-    }else{
-        procfs_buffer_size = len;
     }
-    
+
     //limpiamos el buffer del kernel para la nueva escritura
-    memset(procfs_buffer,0,sizeof(procfs_buffer));
-    /*
+    memset(procfs_buffer,0,sizeof procfs_buffer);
+    
     //se copia datos del user space al kernel space
     //to, from, tamaño
     if (copy_from_user(procfs_buffer,buff,procfs_buffer_size)){
         return -EFAULT;
-    }*/
-    pr_info("Se ha escrito correctamente: %s \n",buff);
+    }
+    //Agregamos elemento nulo
+    procfs_buffer[procfs_buffer_size]='\0';
+    //Actualizamos desplazamiento
+    *off+=procfs_buffer_size;
+    
+    pr_info("Se ha escrito correctamente: %s \n", procfs_buffer);
+    pr_info("Escritura terminada.\n");
 
     return procfs_buffer_size;
 }
