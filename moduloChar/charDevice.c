@@ -36,7 +36,6 @@ operations table for your driver.*/
 static int major; //major number assigned to our device driver
 static int Device_open = 0; //used to prevent multiple access to device
 
-char string[] = ""; //Donde guardamos el mensaje al reves o ultimo
 static char procfs_buffer[PROCFS_MAX_SIZE]; //cant de bytes escritos
 static unsigned long procfs_buffer_size = 0; //seria el bytes_read
 
@@ -83,30 +82,44 @@ static int device_release(struct inode *inode, struct file *file)
     return SUCCESS;
 }
 
-//When a process, which already opened the dev file, attempts to read from it
-static ssize_t device_read(struct file *filp, char *buffer, size_t length, loff_t *offset)
-{    
+//Method to reverse a msg
+void reverso(char *buffer){
     int i=0;
-    int j=procfs_buffer_size-2;
+    int j=procfs_buffer_size-2; 
+    char letra;
 
-    if(*offset >= procfs_buffer_size){
-        pr_info("Lectura terminada. \n");
-        return SUCCESS; //termino lectura
+    if(buffer == NULL){
+        return; //No hay msg que procesar
     }
-    //copiar el contenido //to, from/ cant bytes q se copiaran
-    //se copia el contenido del kernel al user space
-    if (copy_to_user(buffer,procfs_buffer,procfs_buffer_size)){
-        return -EFAULT; //si hay error al copiar los datos
-    } 
-    
-    //reverso
+
+    //Ahora vamos intercambiando las letras
     while(i<j){
-        char letra = buffer[i];
+        letra = buffer[i];
         buffer[i]=buffer[j];
         buffer[j]=letra;
         i++;
         j--;
     }
+
+}
+
+
+//When a process, which already opened the dev file, attempts to read from it
+static ssize_t device_read(struct file *filp, char *buffer, size_t length, loff_t *offset)
+{    
+    if(*offset >= procfs_buffer_size){
+        pr_info("Lectura terminada. \n");
+        return SUCCESS; //termino lectura
+    }
+
+    //copiar el contenido //to, from/ cant bytes q se copiaran
+    //se copia el contenido del kernel al user space
+    if (copy_to_user(buffer,procfs_buffer,procfs_buffer_size)){
+        return -EFAULT; //si hay error al copiar los datos
+    }
+    
+    //Damos vuelta el mensaje
+    reverso(buffer);
     
     //Actualizamos la posicion del offset
     *offset += procfs_buffer_size;
