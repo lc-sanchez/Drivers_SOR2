@@ -64,7 +64,7 @@ void cleanup_module(void)
 }
 
 //metodos
-/*Cuando a process tries to open the device file like "cat /dev/mycharfile"*/
+/*When a process tries to open the device file like "cat /dev/mycharfile"*/
 static int device_open(struct inode *inode, struct file *file)
 {
     if(Device_open){
