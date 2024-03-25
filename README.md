@@ -30,7 +30,7 @@ Luego se realizar la carga del módulo y la verificación de la carga:
 >> sudo insmod ./charDeviceRev.ko
 >> sudo lsmod
 ```
-Posteriormente, se realiza el la creaciónde un carpeta especial para nuestro device, brindandole los correctos permisos para las pruebas de escritura y lectura.
+Posteriormente, se realiza el la creación de una carpeta especial para nuestro device, brindandole los correctos permisos para las pruebas de escritura y lectura.
 ```
 >> sudo mknod /dev/charDeviceRev c 240 0
 >> sudo chmod 777 /dev/charDeviceRev
