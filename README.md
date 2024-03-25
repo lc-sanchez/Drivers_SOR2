@@ -1,11 +1,11 @@
 # Trabajo Práctico: Device Drivers
-***
+
 El objetivo del proyecto es comprender el funcionamiento de los módulos del kernel. A partir de material teórico brindado por los docentes se implementaron 
 tres módulos cada uno con una función determinada. El formato que se decidió ordenar los archivos es tal que cada carpeta representa un módulo y en ellas se encontrará
 el código C correspondiente y su archivo makefile para facilitar la compilación.
 
 Sin embargo, para mayor información se recomienda la lectura del informe en formato pdf que se encuentra en este repositorio.
-***
+
 ## Información general
 ### Tecnologías y material adicional
 A continuación se mencionará material adicional que se ha utilizado para la realización de este trabajo:
