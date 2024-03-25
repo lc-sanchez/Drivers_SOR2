@@ -3,6 +3,7 @@
 El objetivo del proyecto es comprender el funcionamiento de los módulos del kernel. A partir de material teórico brindado por los docentes se implementaron 
 tres módulos cada uno con una función determinada. El formato que se decidió ordenar los archivos es tal que cada carpeta representa un módulo y en ellas se encontrará
 el código C correspondiente y su archivo makefile para facilitar la compilación.
+
 Sin embargo, para mayor información se recomienda la lectura del informe en formato pdf que se encuentra en este repositorio.
 ***
 ## Información general
@@ -14,8 +15,9 @@ A continuación se mencionará material adicional que se ha utilizado para la re
 * [Maquina Virtual brindada](https://drive.google.com/file/d/1NrkzMOM3EC9-55VPpU-ZjR1VfAiyE5aF/view?usp=drive_link)
 
 ### Implementación del último punto
-Se decide explicar en esta área el último punto solicitado en el trabajo práctico debido a que es el más complejo y completo de los solicitados, capaz de brindar una
+Se decide explicar en esta área el último punto pedido en el trabajo práctico debido a que es el más complejo y completo de los solicitados, capaz de brindar una
 mayor información sobre los comandos para ejecutar los puntos anteriores sin problemas.
+
 Dicho punto consiste en implementar un módulo capaz de recibir una palabra al escribir en el y devuelva el mensaje al reves.
 
 En primer lugar, para poder realizar la correcta carga y uso del charDeviceRev se debe ubicar en la carpeta moduloCharRev y ejecutar el comando *make*.
